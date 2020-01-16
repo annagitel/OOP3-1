@@ -1,15 +1,15 @@
 package dataStructure;
 
-import oop_elements.OOP_NodeData;
-import oop_utils.OOP_Point3D;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import utils.Point3D;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Scanner;
 
 /**
  * this class represents a Directed, weighted graph
@@ -20,6 +20,7 @@ public class DGraph implements graph, Serializable {
     private HashMap<Integer, node_data> nodes; //graph nodes
     public int modeCount =0;
     private int edgeCount=0;
+    private int nodeCount=0;
 
     /************constractors*****************/
 
@@ -148,9 +149,10 @@ public class DGraph implements graph, Serializable {
         return this.modeCount;
     }
 
-    public void init(String jsonSTR) {
+
+    public void init(String jsonSTR) { // init from Json
         try {
-            OOP_NodeData.resetCount();
+            this.nodeCount=0;
             this.init();
             this.edgeCount = 0;
             JSONObject graph = new JSONObject(jsonSTR);
@@ -180,5 +182,36 @@ public class DGraph implements graph, Serializable {
     private void init() {
         this.nodes = new HashMap();
         this.edges = new HashMap();
+    }
+    public DGraph(String file_name) {
+        try {
+            this.init();
+            nodeCount=0;
+            Scanner scanner = new Scanner(new File(file_name));
+            String jsonString = scanner.useDelimiter("\\A").next();
+            scanner.close();
+            JSONObject graph = new JSONObject(jsonString);
+            JSONArray nodes = graph.getJSONArray("Nodes");
+            JSONArray edges = graph.getJSONArray("Edges");
+
+            int i;
+            int s;
+            for(i = 0; i < nodes.length(); ++i) {
+                s = nodes.getJSONObject(i).getInt("id");
+                String pos = nodes.getJSONObject(i).getString("pos");
+                Point3D p = new Point3D(pos);
+                this.addNode(new NodeData(s, p));
+            }
+
+            for(i = 0; i < edges.length(); ++i) {
+                s = edges.getJSONObject(i).getInt("src");
+                int d = edges.getJSONObject(i).getInt("dest");
+                double w = edges.getJSONObject(i).getDouble("w");
+                this.connect(s, d, w);
+            }
+        } catch (Exception var12) {
+            var12.printStackTrace();
+        }
+
     }
 }
