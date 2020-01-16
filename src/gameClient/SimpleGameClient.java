@@ -1,9 +1,13 @@
 package gameClient;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import algorithms.Graph_Algo;
+import dataStructure.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,6 +16,9 @@ import Server.game_service;
 import oop_dataStructure.OOP_DGraph;
 import oop_dataStructure.oop_edge_data;
 import oop_dataStructure.oop_graph;
+
+import javax.swing.*;
+
 /**
  * This class represents a simple example for using the GameServer API:
  * the main file performs the following tasks:
@@ -33,10 +40,16 @@ public class SimpleGameClient {
 	public static void main(String[] a) {
 		test1();}
 	public static void test1() {
-		int scenario_num = 2;
+		JFrame f = new JFrame();
+		int auto = JOptionPane.showConfirmDialog(
+				f,
+				"Would you like to play auto game?",
+				"The GAME of Y & ANA",
+				JOptionPane.YES_NO_OPTION);
+		int scenario_num = Integer.parseInt(JOptionPane.showInputDialog(f,"Choose youre game num between [0,23]"));
 		game_service game = Game_Server.getServer(scenario_num); // you have [0,23] games
 		String g = game.getGraph();
-		OOP_DGraph gg = new OOP_DGraph();
+		DGraph gg = new DGraph();
 		gg.init(g);
 		String info = game.toString();
 		JSONObject line;
@@ -68,9 +81,9 @@ public class SimpleGameClient {
 	 * in case the robot is on a node the next destination (next edge) is chosen (randomly).
 	 * @param game
 	 * @param gg
-	 * @param log
+	 * @param
 	 */
-	private static void moveRobots(game_service game, oop_graph gg) {
+	private static void moveRobots(game_service game, graph gg) {
 		List<String> log = game.move();
 		if(log!=null) {
 			long t = game.timeToEnd();
@@ -84,7 +97,7 @@ public class SimpleGameClient {
 					int dest = ttt.getInt("dest");
 				
 					if(dest==-1) {	
-						dest = nextNode(gg, src);
+						dest = nextNode(gg, src,game);
 						game.chooseNextEdge(rid, dest);
 						System.out.println("Turn to node: "+dest+"  time to end:"+(t/1000));
 						System.out.println(ttt);
@@ -100,16 +113,20 @@ public class SimpleGameClient {
 	 * @param src
 	 * @return
 	 */
-	private static int nextNode(oop_graph g, int src) {
-		int ans = -1;
-		Collection<oop_edge_data> ee = g.getE(src);
-		Iterator<oop_edge_data> itr = ee.iterator();
-		int s = ee.size();
-		int r = (int)(Math.random()*s);
-		int i=0;
-		while(i<r) {itr.next();i++;}
-		ans = itr.next().getDest();
-		return ans;
+	private static int nextNode(graph g, int src,game_service game) {
+		Graph_Algo graph_algo = new Graph_Algo(g);
+		allFruits myFruits = new allFruits((DGraph) g, game);
+		Fruit f = myFruits.closeTo(src);
+		System.out.println("f = " +f);
+		if (f==null) return -1;
+		System.out.println("f = " +f.getEdge().toString());
+
+		if (f.getEdge().getDest()==src) return f.getEdge().getSrc();
+		if (f.getEdge().getSrc()==src) return f.getEdge().getDest();
+			List<node_data> temp = graph_algo.shortestPath(src, f.getEdge().getSrc());
+		if (temp == null||temp.isEmpty()||temp.size()==1) return -1;
+				return temp.get(1).getKey();
 	}
+
 
 }
