@@ -37,6 +37,7 @@ import java.util.Iterator;
                  ;
                  Point3D possition = new Point3D(ttt.getString("pos"));
                  Robot temp = new Robot(rid, possition);
+                 RobotsHashtable.put(temp.getid(),temp);
                  id++;
 
              } catch (Exception e) {

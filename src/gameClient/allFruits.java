@@ -1,6 +1,7 @@
 package gameClient;
 
 import Server.game_service;
+import algorithms.Graph_Algo;
 import dataStructure.DGraph;
 import dataStructure.edge_data;
 import dataStructure.node_data;
@@ -13,6 +14,7 @@ import java.util.Iterator;
 public class allFruits {
 
     private ArrayList<Fruit> fruitArrayList = new ArrayList<>();
+    private DGraph graph;
 
 
    public Iterator<Fruit> getArrayFruit(){  //return all the fruit by iterator
@@ -25,6 +27,7 @@ public class allFruits {
    }
 
     public allFruits(DGraph g, game_service game){
+       this.graph = g;
         int id =0;
         Iterator<String> f_iterator = game.getFruits().iterator();
         while(f_iterator.hasNext()) {
@@ -36,6 +39,7 @@ public class allFruits {
                 int type = ttt.getInt("type");
                 Point3D possition =new Point3D (ttt.getString("pos"));
                 Fruit temp = new Fruit(value, possition, findE(possition, g, type), type, id);
+                fruitArrayList.add(temp);
                 id++;
             }catch (Exception e){
 
@@ -64,5 +68,23 @@ public class allFruits {
            return true;
        }
        return false;
+    }
+
+    public Fruit closeTo(int src) {
+       Iterator<Fruit> fruitIterator = getArrayFruit();
+        Graph_Algo graph_algo = new Graph_Algo(this.graph);
+        System.out.println(fruitArrayList.size());
+        if (fruitIterator.hasNext()) {
+            Fruit closeTo = fruitIterator.next();
+            while (fruitIterator.hasNext()) {
+                Fruit current = fruitIterator.next();
+                if (graph_algo.shortestPathDist(src, closeTo.getEdge().getSrc()) > graph_algo.shortestPathDist(src, current.getEdge().getSrc())) {
+                        closeTo = current;
+                }
+
+            }
+            return closeTo;
+        }
+        return null;
     }
 }

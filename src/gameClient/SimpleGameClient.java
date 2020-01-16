@@ -51,6 +51,7 @@ public class SimpleGameClient {
 		String g = game.getGraph();
 		DGraph gg = new DGraph();
 		gg.init(g);
+		MyGameGUI myGameGUI = new MyGameGUI(gg,game);
 		String info = game.toString();
 		JSONObject line;
 		try {
