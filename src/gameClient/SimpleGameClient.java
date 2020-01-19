@@ -1,5 +1,7 @@
 package gameClient;
 
+import java.awt.*;
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,22 +40,34 @@ import javax.swing.*;
  * @author boaz.benmoshe
  *
  */
-public class SimpleGameClient {
+public class SimpleGameClient extends Component {
 	static boolean auto=false;
 	public static void main(String[] a) {
 		test1();}
 	public static void test1() {
+		KML_Logger kmlog;
 		JFrame f = new JFrame();
 		auto = JOptionPane.showConfirmDialog(
 				f,
 				"Would you like to play auto game?",
-				"The GAME of Y & ANA",
+				"The GAME of Yana & Anna",
 				JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION;
 		int scenario_num = Integer.parseInt(JOptionPane.showInputDialog(f,"Choose youre game num between [0,23]"));
 		game_service game = Game_Server.getServer(scenario_num); // you have [0,23] games
 		String g = game.getGraph();
-		DGraph gg = new DGraph();
+		DGraph gg = new DGraph(); /*****************************************************/
 		gg.init(g);
+		ArrayList<Fruit> fruits = new ArrayList<>();
+		ArrayList<Robot> robots = new ArrayList<>();
+		List<String> robots_string = game.getRobots();
+		List<String> fruit_string = game.getFruits();
+		for (String fruit : fruit_string)
+			fruits.add(new Fruit(gg,fruit));
+
+		for (String robot : robots_string)
+			robots.add(new Robot(robot));
+
+		kmlog = new KML_Logger(gg, fruits, robots);
 		MyGameGUI myGameGUI = new MyGameGUI(gg,game);
 		String info = game.toString();
 		JSONObject line;
@@ -95,10 +109,26 @@ public class SimpleGameClient {
 		// should be a Thread!!!
 		while(game.isRunning()) {
 			moveRobots(game, gg);
+			kmlog.writeStatus();
 		}
 		String results = game.toString();
+
 		System.out.println("Game Over: "+results);
+		kmlog.closeKml();
+		boolean b = JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(null,
+				"save as kml?");
+		if(b==true){
+			JFileChooser fileChooser = new JFileChooser();
+			fileChooser.setCurrentDirectory(new File("kml"));
+			File selectedFile = fileChooser.getSelectedFile();
+			String path = selectedFile.getAbsolutePath();
+			if(!path.endsWith(".kml"))
+				path += ".kml";
+			kmlog.save(path);
+		}
+
 	}
+
 	/** 
 	 * Moves each of the robots along the edge, 
 	 * in case the robot is on a node the next destination (next edge) is chosen (randomly).
@@ -186,5 +216,6 @@ public class SimpleGameClient {
 		}
 		return next;
 	}
+
 
 }
