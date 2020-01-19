@@ -8,4 +8,4 @@ The player has two options- manual game where he can move the robots by himselfm
 This project has a GUI that uses the STDRAW library and represents a graphic view of the game. 
 the game log can be saved in a KML file and be presented on the Google earth application
 [Learn More](https://github.com/yanashayev/OOP3/wiki)
-![alt text]()
+![alt text](https://user-images.githubusercontent.com/57480476/72687014-c6d45900-3b02-11ea-86d6-5945d842f923.PNG)
