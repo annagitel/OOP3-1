@@ -81,7 +81,12 @@ public class MyGameGUI {
         allFruits fruits= new allFruits(graph,game);
         for (Iterator<Fruit> it = fruits.getArrayFruit(); it.hasNext(); ) {
             Fruit f = it.next();
-            StdDraw.setPenColor(StdDraw.PINK);
+            if (f.getType()==-1) {
+                StdDraw.setPenColor(StdDraw.PINK);
+            }else {
+                StdDraw.setPenColor(StdDraw.YELLOW);
+
+            }
             StdDraw.setPenRadius(0.06);
             StdDraw.point(f.getLocation().x(),f.getLocation().y());
         }
