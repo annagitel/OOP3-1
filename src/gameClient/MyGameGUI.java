@@ -81,24 +81,21 @@ public class MyGameGUI {
         allFruits fruits= new allFruits(graph,game);
         for (Iterator<Fruit> it = fruits.getArrayFruit(); it.hasNext(); ) {
             Fruit f = it.next();
+            String filepath;
             if (f.getType()==-1) {
-                StdDraw.setPenColor(StdDraw.PINK);
+                filepath = "utils/apple.png";
             }else {
-                StdDraw.setPenColor(StdDraw.YELLOW);
-
+                filepath = "utils/banana.png";
             }
-            StdDraw.setPenRadius(0.06);
-            StdDraw.point(f.getLocation().x(),f.getLocation().y());
+
+            StdDraw.picture(f.getLocation().x(),f.getLocation().y(), filepath);
         }
     }
     private void printrobots(){
         allRobots robots= new allRobots(graph,game);
         for (Iterator<Robot> it = robots.getRobots(); it.hasNext(); ) {
             Robot r = it.next();
-            StdDraw.setPenColor(StdDraw.BLUE);
-            StdDraw.setPenRadius(0.09);
-            StdDraw.point(r.getlocation().x(),r.getlocation().y());
-
+            StdDraw.picture(r.getlocation().x(),r.getlocation().y(),"utils/beagle.png");
 
         }
 
