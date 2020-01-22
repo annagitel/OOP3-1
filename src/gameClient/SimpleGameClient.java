@@ -57,17 +57,10 @@ public class SimpleGameClient extends Component {
 		String g = game.getGraph();
 		DGraph gg = new DGraph(); /*****************************************************/
 		gg.init(g);
-		ArrayList<Fruit> fruits = new ArrayList<>();
-		ArrayList<Robot> robots = new ArrayList<>();
-		List<String> robots_string = game.getRobots();
-		List<String> fruit_string = game.getFruits();
-		for (String fruit : fruit_string)
-			fruits.add(new Fruit(gg,fruit));
+		allFruits allFruits=new allFruits(gg,game);
+		allRobots allRobots=new allRobots(gg,game);
 
-		for (String robot : robots_string)
-			robots.add(new Robot(robot));
-
-		kmlog = new KML_Logger(gg, fruits, robots);
+		kmlog = new KML_Logger(gg, allFruits, allRobots);
 		MyGameGUI myGameGUI = new MyGameGUI(gg,game);
 		String info = game.toString();
 		JSONObject line;
@@ -106,10 +99,14 @@ public class SimpleGameClient extends Component {
 		}
 		catch (JSONException e) {e.printStackTrace();}
 		game.startGame();
+		long l = game.timeToEnd();
 		// should be a Thread!!!
 		while(game.isRunning()) {
 			moveRobots(game, gg);
-			kmlog.writeStatus();
+			if (l-game.timeToEnd()>120L) {
+				kmlog.writeStatus();
+				l=game.timeToEnd();
+			}
 		}
 		String results = game.toString();
 

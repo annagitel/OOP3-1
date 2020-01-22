@@ -16,15 +16,13 @@ public class allFruits {
     private ArrayList<Fruit> fruitArrayList = new ArrayList<>();
     private DGraph graph;
 
+public allFruits(){
 
+}
    public Iterator<Fruit> getArrayFruit(){  //return all the fruit by iterator
        return fruitArrayList.iterator();
    }
-   public Fruit getFByid(int id){ // return fruit by id
-       if(id>=fruitArrayList.size())
-           return null;
-       return fruitArrayList.get(id);
-   }
+
 
     public allFruits(DGraph g, game_service game){
        this.graph = g;

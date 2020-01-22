@@ -3,21 +3,23 @@ package gameClient;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
+
 import dataStructure.DGraph;
 import dataStructure.edge_data;
 import dataStructure.node_data;
 
 public class KML_Logger {
     private final DGraph graph;
-    private final ArrayList<Fruit> fruits;
-    private final ArrayList<Robot> robots;
+    private final allFruits fruits;
+    private final allRobots robots;
     private StringBuilder kmlOut = new StringBuilder();
     private StringBuilder kmlRobots = new StringBuilder();
     private StringBuilder kmlFruits = new StringBuilder();
     private long time = 0;
     private String projectPath = System.getProperty("user.dir");
 
-    public KML_Logger(DGraph graph, ArrayList<Fruit> fruits, ArrayList<Robot> robots) {
+    public KML_Logger(DGraph graph, allFruits fruits, allRobots robots) {
         this.graph = graph;
         this.fruits = fruits;
         this.robots = robots;
@@ -28,14 +30,16 @@ public class KML_Logger {
     }
 
     private void writeRobots() {
-        for (Object robot : robots ) {
-            writeRobot((Robot) robot);
+        for (Iterator<Robot> it = robots.getRobots(); it.hasNext(); ) {
+            Robot r = it.next();
+            writeRobot(r);
         }
     }
 
     private void writeFruits() {
-        for (Object fruit : fruits) {
-            writeFruit((Fruit) fruit);
+        for (Iterator<Fruit> it = fruits.getArrayFruit(); it.hasNext(); ) {
+            Fruit f = it.next();
+            writeFruit(f);
         }
     }
 
@@ -88,8 +92,7 @@ public class KML_Logger {
         kmlOut.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n");
         kmlOut.append("<kml xmlns=\"http://www.opengis.net/kml/2.2\">\r\n");
         kmlOut.append("  <Document>\r\n");
-        kmlOut.append("    <name>Maze of Waze</name>\r\n");
-        kmlOut.append("    <description>Presentation of \"Maze of Waze\" game created by Netanel Albert</description>\r\n");
+        kmlOut.append("    <name>OOP3</name>\r\n");
         kmlOut.append("    <Style id=\"edgesYellow\">\r\n");
         kmlOut.append("      <LineStyle>\r\n");
         kmlOut.append("        <color>7f000000</color>\r\n");
