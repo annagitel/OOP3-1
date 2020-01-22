@@ -19,6 +19,9 @@ public class allFruits {
 public allFruits(){
 
 }
+public ArrayList<Fruit> getArray(){
+    return this.fruitArrayList;
+}
    public Iterator<Fruit> getArrayFruit(){  //return all the fruit by iterator
        return fruitArrayList.iterator();
    }
@@ -69,6 +72,7 @@ public allFruits(){
     }
 
     public Fruit closeTo(int src) {
+
        Iterator<Fruit> fruitIterator = getArrayFruit();
         Graph_Algo graph_algo = new Graph_Algo(this.graph);
         System.out.println(fruitArrayList.size());
@@ -84,5 +88,21 @@ public allFruits(){
             return closeTo;
         }
         return null;
+    }
+    public Fruit theMaxValue(int src){
+        ArrayList<Fruit> f= getArray();
+        Fruit temp=f.get(0);
+        System.out.println("first f"+temp.getValue());
+        for (Fruit f1:f) {
+
+            System.out.println("f in lopp"+f1.getValue());
+            if(f1.getValue()>temp.getValue()){
+                temp=f1;
+                System.out.println("change if bigger"+temp.getValue());
+            }
+
+        }
+        System.out.println("the biggest"+temp.getValue());
+        return temp;
     }
 }

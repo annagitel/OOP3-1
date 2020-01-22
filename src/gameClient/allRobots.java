@@ -18,6 +18,9 @@ import java.util.Iterator;
      public Iterator<Robot> getRobots() {
          return RobotsHashtable.values().iterator();
      }
+     public Hashtable<Integer,Robot> getR(){
+         return this.RobotsHashtable;
+     }
      public int getSizeRobots() {
          return RobotsHashtable.values().size();
      }
@@ -39,9 +42,9 @@ import java.util.Iterator;
                  int rid = ttt.getInt("id");
                  int src = ttt.getInt("src");
                  int dest = ttt.getInt("dest");
-                 ;
+                 int speed=ttt.getInt("speed");
                  Point3D possition = new Point3D(ttt.getString("pos"));
-                 Robot temp = new Robot(rid, possition);
+                 Robot temp = new Robot(rid, possition,speed);
                  RobotsHashtable.put(temp.getid(),temp);
 
 

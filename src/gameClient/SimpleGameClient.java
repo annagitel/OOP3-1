@@ -46,6 +46,8 @@ public class SimpleGameClient extends Component {
 	public static void main(String[] a) throws Exception {
 		test1();}
 	public static void test1() throws Exception {
+		int id=316316249;
+		Game_Server.login(id);
 		KML_Logger kmlog;
 		JFrame f = new JFrame();
 		auto = JOptionPane.showConfirmDialog(
@@ -63,6 +65,7 @@ public class SimpleGameClient extends Component {
 		kmlog = new KML_Logger();
 
 		kmlog.addRovotsAndFruits(gg,game);
+		MyGameGUI myGameGUI = new MyGameGUI(gg,game);
 		String info = game.toString();
 		JSONObject line;
 		try {
@@ -83,7 +86,7 @@ public class SimpleGameClient extends Component {
 			int src_node = 0;  // arbitrary node, you should start at one of the fruits
 			for(int a = 0;a<rs;a++) {
 				if(auto) {
-					game.addRobot(src_node + a);
+					game.addRobot(4);
 				}
 				else{
 					int where = -1;
@@ -104,9 +107,10 @@ public class SimpleGameClient extends Component {
 		long l = game.timeToEnd();
 		// should be a Thread!!!
 		while(game.isRunning()) {
-			moveRobots(game, gg);
-			if (l-game.timeToEnd()>120L) {
+
+			if (l-game.timeToEnd()>100L) {
 				kmlog.addRovotsAndFruits(gg,game);
+				moveRobots(game, gg);
 				l=game.timeToEnd();
 			}
 		}
@@ -117,6 +121,8 @@ public class SimpleGameClient extends Component {
 				"save as kml?");
 		if(b==true){
 			String filename = JOptionPane.showInputDialog(f, "Enter name to file save game ");
+			String remark = kmlog.getLgerOfGame().toString();
+			game.sendKML(remark); // Should be your KML (will not work on case -1).
 			kmlog.save(filename);
 
 		}
@@ -169,20 +175,38 @@ public class SimpleGameClient extends Component {
 		if (auto) {
 			Graph_Algo graph_algo = new Graph_Algo(g);
 			allFruits myFruits = new allFruits((DGraph) g, game);
-			Fruit f = myFruits.closeTo(src);
-			System.out.println("f = " + f);
-			if (f == null) return -1;
-			System.out.println("f = " + f.getEdge().toString());
+			allRobots myRobot= new allRobots((DGraph) g,game);
+			for (Iterator<Robot> it = myRobot.getRobots(); it.hasNext(); ) {
+				Robot r = it.next();
+				if (r.getSpeed() >3) {
+					Fruit f = myFruits.theMaxValue(src);
+					System.out.println("f = " + f);
+					if (f == null) return -1;
+					System.out.println("f = " + f.getEdge().toString());
 
-			if (f.getEdge().getDest() == src) return f.getEdge().getSrc();
-			if (f.getEdge().getSrc() == src) return f.getEdge().getDest();
-			List<node_data> temp = graph_algo.shortestPath(src, f.getEdge().getSrc());
-			if (temp == null || temp.isEmpty() || temp.size() == 1) return -1;
-			return temp.get(1).getKey();
+					if (f.getEdge().getDest() == src) return f.getEdge().getSrc();
+					if (f.getEdge().getSrc() == src) return f.getEdge().getDest();
+					List<node_data> temp = graph_algo.shortestPath(src, f.getEdge().getSrc());
+					if (temp == null || temp.isEmpty() || temp.size() == 1) return -1;
+					return temp.get(1).getKey();
+				} else {
+					Fruit f = myFruits.closeTo(src);
+					System.out.println("f = " + f);
+					if (f == null) return -1;
+					System.out.println("f = " + f.getEdge().toString());
+
+					if (f.getEdge().getDest() == src) return f.getEdge().getSrc();
+					if (f.getEdge().getSrc() == src) return f.getEdge().getDest();
+					List<node_data> temp = graph_algo.shortestPath(src, f.getEdge().getSrc());
+					if (temp == null || temp.isEmpty() || temp.size() == 1) return -1;
+					return temp.get(1).getKey();
+
+
+				}
+			}
 		}
-		else {
 			return moverobot(src,g);
-		}
+
 	}
 	public static int putrobots(DGraph g, game_service game, int rs){
 		int src = -1;

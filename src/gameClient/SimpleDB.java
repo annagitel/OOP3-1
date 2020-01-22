@@ -20,14 +20,14 @@ public class SimpleDB {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-			int id1 = 316334440;  // "real" existing ID & KML
-			int id2 = 12345678;
-			int level = 0;//1,2,3
+			int id1 = 0;  // "real" existing ID & KML
+			int id2 = 316316249;
+			int level = 1;//1,2,3
 			printLog(id2);
-			//allUsers();	
-			//String kml1 = getKML(id1,level);
+			//allUsers();
+			String kml1 = getKML(id2,level);
 			System.out.println("***** KML1 file example: ******");
-			//System.out.println(kml1);
+			System.out.println(kml1);
 		}
 	/** simply prints all the games as played by the users (in the database).
 	 * 

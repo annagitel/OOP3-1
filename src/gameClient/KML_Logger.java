@@ -139,6 +139,7 @@ public class KML_Logger {
     public StringBuilder getLgerOfGame() {
         return kmlall;
     }
+
 }
 
 
