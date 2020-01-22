@@ -2,6 +2,7 @@ package gameClient;
 
 import java.awt.*;
 import java.io.File;
+import java.io.FileWriter;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,9 +43,9 @@ import javax.swing.*;
  */
 public class SimpleGameClient extends Component {
 	static boolean auto=false;
-	public static void main(String[] a) {
+	public static void main(String[] a) throws Exception {
 		test1();}
-	public static void test1() {
+	public static void test1() throws Exception {
 		KML_Logger kmlog;
 		JFrame f = new JFrame();
 		auto = JOptionPane.showConfirmDialog(
@@ -60,7 +61,9 @@ public class SimpleGameClient extends Component {
 		allFruits allFruits=new allFruits(gg,game);
 		allRobots allRobots=new allRobots(gg,game);
 
-		kmlog = new KML_Logger(gg, allFruits, allRobots);
+		kmlog = new KML_Logger();
+
+		kmlog.addRovotsAndFruits(gg,game);
 		MyGameGUI myGameGUI = new MyGameGUI(gg,game);
 		String info = game.toString();
 		JSONObject line;
@@ -69,6 +72,7 @@ public class SimpleGameClient extends Component {
 			JSONObject ttt = line.getJSONObject("GameServer");
 			int rs = ttt.getInt("robots");
 			if(!auto){
+				kmlog.addGraph(gg);
 				JFrame frame = new JFrame();
 				JOptionPane.showMessageDialog(frame,
 						"you have "+rs+" robots, please posit them");
@@ -77,7 +81,7 @@ public class SimpleGameClient extends Component {
 			System.out.println(g);
 			// the list of fruits should be considered in your solution
 			Iterator<String> f_iter = game.getFruits().iterator();
-			while(f_iter.hasNext()) {System.out.println(f_iter.next());}	
+			while(f_iter.hasNext()) {System.out.println(f_iter.next());}
 			int src_node = 0;  // arbitrary node, you should start at one of the fruits
 			for(int a = 0;a<rs;a++) {
 				if(auto) {
@@ -104,30 +108,30 @@ public class SimpleGameClient extends Component {
 		while(game.isRunning()) {
 			moveRobots(game, gg);
 			if (l-game.timeToEnd()>120L) {
-				kmlog.writeStatus();
+				kmlog.addRovotsAndFruits(gg,game);
 				l=game.timeToEnd();
 			}
 		}
 		String results = game.toString();
 
 		System.out.println("Game Over: "+results);
-		kmlog.closeKml();
 		boolean b = JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(null,
 				"save as kml?");
 		if(b==true){
-			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setCurrentDirectory(new File("kml"));
-			File selectedFile = fileChooser.getSelectedFile();
-			String path = selectedFile.getAbsolutePath();
-			if(!path.endsWith(".kml"))
-				path += ".kml";
-			kmlog.save(path);
+			String filename = JOptionPane.showInputDialog(f, "Enter name to file save game ");
+			kmlog.save(filename);
+
 		}
+
 
 	}
 
-	/** 
-	 * Moves each of the robots along the edge, 
+
+
+
+
+	/**
+	 * Moves each of the robots along the edge,
 	 * in case the robot is on a node the next destination (next edge) is chosen (randomly).
 	 * @param game
 	 * @param gg
@@ -145,14 +149,14 @@ public class SimpleGameClient extends Component {
 					int rid = ttt.getInt("id");
 					int src = ttt.getInt("src");
 					int dest = ttt.getInt("dest");
-				
-					if(dest==-1) {	
+
+					if(dest==-1) {
 						dest = nextNode(gg, src,game);
 						game.chooseNextEdge(rid, dest);
 						System.out.println("Turn to node: "+dest+"  time to end:"+(t/1000));
 						System.out.println(ttt);
 					}
-				} 
+				}
 				catch (JSONException e) {e.printStackTrace();}
 			}
 		}
