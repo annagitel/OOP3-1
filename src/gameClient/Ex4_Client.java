@@ -14,6 +14,8 @@ import oop_dataStructure.OOP_DGraph;
 import oop_dataStructure.oop_edge_data;
 import oop_dataStructure.oop_graph;
 import oop_utils.OOP_Point3D;
+
+
 /**
 * This class represents a simple example for using the GameServer API:
 * the main file performs the following tasks:
@@ -81,7 +83,7 @@ public class Ex4_Client implements Runnable{
 	 * in case the robot is on a node the next destination (next edge) is chosen (randomly).
 	 * @param game
 	 * @param gg
-	 * @param log
+	 * @param
 	 */
 	private static void moveRobots(game_service game, oop_graph gg) {
 		List<String> log = game.move();

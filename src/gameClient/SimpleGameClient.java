@@ -58,13 +58,11 @@ public class SimpleGameClient extends Component {
 		String g = game.getGraph();
 		DGraph gg = new DGraph(); /*****************************************************/
 		gg.init(g);
-		allFruits allFruits=new allFruits(gg,game);
-		allRobots allRobots=new allRobots(gg,game);
+
 
 		kmlog = new KML_Logger();
 
 		kmlog.addRovotsAndFruits(gg,game);
-		MyGameGUI myGameGUI = new MyGameGUI(gg,game);
 		String info = game.toString();
 		JSONObject line;
 		try {
