@@ -725,6 +725,8 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		menuItem1.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
 				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		menu.add(menuItem1);
+		info.add(aboutUsers);
+		info.add(aboutme);
 		return menuBar;
 	}
 
@@ -1666,9 +1668,14 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 				HashMap<Integer,String > myScores = SimpleDB.getMyScores(Integer.parseInt(id));
 				JOptionPane.showMessageDialog(frame, "Your level is: "+ String.valueOf(level) +"\n"
 														+ "Games playd: "+ String.valueOf(games)+ "\n");
-			}
 
 				break;
+			}
+			/*case "About all users":{
+				String id = JOptionPane.showInputDialog(frame, "enter your Id" );
+				HashMap<Integer,String > mallScores = SimpleDB.getBestScores(Integer.parseInt(id));
+			}
+				break;*/
 		}
 	}
 
