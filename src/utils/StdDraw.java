@@ -27,6 +27,8 @@ package utils;
  *
  ******************************************************************************/
 
+import gameClient.SimpleDB;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FileDialog;
@@ -62,18 +64,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.TreeSet;
 import java.util.NoSuchElementException;
 import javax.imageio.ImageIO;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
 /**
  *  The {@code StdDraw} class provides a basic capability for
@@ -720,8 +717,8 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		menuBar.add(menu);
 		menuBar.add(info);
 		JMenuItem menuItem1 = new JMenuItem(" Save...   ");
-		JMenuItem aboutUsers = new JMenuItem("About all users ");
-		JMenuItem aboutme = new JMenuItem(" About me");
+		JMenuItem aboutUsers = new JMenuItem("About all users");
+		JMenuItem aboutme = new JMenuItem("About me");
 		menuItem1.addActionListener(std);
 		aboutme.addActionListener(std);
 		aboutUsers.addActionListener(std);
@@ -1660,11 +1657,24 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		FileDialog chooser = new FileDialog(StdDraw.frame, "Use a .png or .jpg extension", FileDialog.SAVE);
-		chooser.setVisible(true);
-		String filename = chooser.getFile();
-		if (filename != null) {
-			StdDraw.save(chooser.getDirectory() + File.separator + chooser.getFile());
+		String command = e.getActionCommand();
+		switch (command){
+			case "About all users":{
+				String id = JOptionPane.showInputDialog(frame, "enter your Id" );
+				HashMap<Integer,String > bestScores = SimpleDB.getBestScores(Integer.parseInt(id));
+				break;
+			}
+			case "About me":{
+				String id = JOptionPane.showInputDialog(frame, "enter your Id" );
+				int level = SimpleDB.getLevel(Integer.parseInt(id));
+				int games = SimpleDB.getNumOfGames(Integer.parseInt(id));
+				HashMap<Integer,String > myScores = SimpleDB.getMyScores(Integer.parseInt(id));
+				JOptionPane.showMessageDialog(frame, "Your level is: "+ String.valueOf(level) +"\n"
+														+ "Games playd: "+ String.valueOf(games)+ "\n"
+														+ "fuck you");
+			}
+
+				break;
 		}
 	}
 
