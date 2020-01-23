@@ -1659,19 +1659,13 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
 		switch (command){
-			case "About all users":{
-				String id = JOptionPane.showInputDialog(frame, "enter your Id" );
-				HashMap<Integer,String > bestScores = SimpleDB.getBestScores(Integer.parseInt(id));
-				break;
-			}
 			case "About me":{
 				String id = JOptionPane.showInputDialog(frame, "enter your Id" );
 				int level = SimpleDB.getLevel(Integer.parseInt(id));
 				int games = SimpleDB.getNumOfGames(Integer.parseInt(id));
 				HashMap<Integer,String > myScores = SimpleDB.getMyScores(Integer.parseInt(id));
 				JOptionPane.showMessageDialog(frame, "Your level is: "+ String.valueOf(level) +"\n"
-														+ "Games playd: "+ String.valueOf(games)+ "\n"
-														+ "fuck you");
+														+ "Games playd: "+ String.valueOf(games)+ "\n");
 			}
 
 				break;
